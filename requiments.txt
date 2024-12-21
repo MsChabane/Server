@@ -1,0 +1,6 @@
+numpy 
+sicket-learn
+pillow
+flask
+falsk-cors
+pickle
