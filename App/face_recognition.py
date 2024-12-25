@@ -10,7 +10,7 @@ from  PIL import Image
 
 
 
-class Face_Recognition:
+class Face_Recognition :
   def __init__(self,data,target,seuil=0.8,neighbors=3) -> None:
     if data is None :
       raise ValueError("data is undefined")
