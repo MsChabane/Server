@@ -18,8 +18,16 @@ face = Face_Recognition(training)
 @app.route('/',methods=["GET","POST"])
 def home():
     return jsonify({
-        "name":"App for face recenition",
-        "version":"1.0.0"
+        "name":"App for face recognition",
+        "version":"1.0.0",
+        "data":{
+            "images":407,
+            "size":"64 X 64",
+            "train":284,
+            "test":123,
+            "KNN_neihbord":3,
+            'threshold of pca ':0.8
+        }
     })
 
 @app.route("/face_prediction/make_test/<id>",methods=["POST"])
