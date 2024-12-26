@@ -1,19 +1,18 @@
 from App import app
-import PIL
+
 import pickle
 from App.face_recognition import Face_Recognition
-from flask import request,render_template,jsonify
+from flask import request,jsonify
+import base64
+import io  
 
+with open ('training.pickle','rb') as f :
+    training = pickle.load(f)
 
-with open ('data.pickle','rb') as f :
-    data = pickle.load(f)
+with open ("testing.pickle",'rb') as f :
+    testing=pickle.load(f)
 
-with open ('target.pickle','rb') as f :
-    target = pickle.load(f)  
-
-face = Face_Recognition(data ,target)
-
-
+face = Face_Recognition(training)
 
 
 @app.route('/',methods=["GET","POST"])
@@ -21,39 +20,39 @@ def home():
     return jsonify({
         "name":"App for face recenition",
         "version":"1.0.0"
-        
     })
 
-
-@app.route('/face_prediction',methods=['POST'])
-def predir():
-    if 'file' in request.files:
-        img = request.files.get('file')
-        try :
-            prediction = face.predict(img)
-            return jsonify({
-                "Faceid":prediction
-            })
-        except Exception as err:
-            return jsonify ({
-                "erreur":err
-            })
-    return jsonify({
-        "erreur":"file not found"
-    })
-        
-@app.route("/test",methods=["GET",'POST']) 
-def test():
-    try :
-        prediction = face.predict("im.jpg")
+@app.route("/face_prediction/make_test/<id>",methods=["POST"])
+def handel_testing(id):
+    try:
+        id = int(id)
+        prediction= face.predict(testing[id,:-1].reshape((1,-1)))
         return jsonify({
-            "Faceid":str(prediction)
+            "real":str(testing[id,-1]),
+            "prediction":str(prediction[0]),
         })
+    except :
+        return jsonify({
+            "erreur":"must give the number of inscance"
+        })
+     
+
+@app.route("/face_prediction/prediction_source",methods=["POST"])
+def handel():
+    try:
+        data = request.json
+        base64_image = data.get('image')
+        header,body = base64_image.split(",")
         
-    except Exception as err:
-        print(err)
-        return  jsonify ({
-            "erreur":"err"
+        image_data = base64.b64decode(body)
+        
+        prediction = face.predict_source(io.BytesIO(image_data))
+        return jsonify({
+            "faceid" :str(prediction[0]),
         })
-
-
+    except Exception as err:
+        res=  jsonify ({
+            "erreur":str(err)
+        })
+        res.status_code =400
+        return res

@@ -4,27 +4,7 @@ from flask import Flask,jsonify,request
 from flask_cors import CORS
  
 
-class Pca_norme :
-  def __init__(self,seuil) -> None:
-    self.seuil=seuil
-    self.standardScaler=StandardScaler()
 
-  def fit(self ,X):
-    self.standardScaler.fit(X)
-    cor =  np.corrcoef(self.standardScaler.transform(X).T)
-    self.valeurs_propre,self.vecteurs_propre = np.linalg.eig(cor)
-    sort_arg = self.valeurs_propre.argsort()[::-1]
-    self.valeurs_propre=self.valeurs_propre[sort_arg]
-    self.vecteurs_propre=self.vecteurs_propre[:,sort_arg]
-    number_of_axes=0
-    for i in range(len(self.valeurs_propre)):
-      if np.sum(self.valeurs_propre[:i+1])/np.sum(self.valeurs_propre)>=self.seuil:
-        number_of_axes=i
-        break
-    self.valeurs_propre=self.valeurs_propre[:number_of_axes+1]
-    self.vecteurs_propre=self.vecteurs_propre[:,:number_of_axes+1] 
-  def transform(self,X):
-    return self.standardScaler.transform(X).dot(self.vecteurs_propre)
 
 class Face_Recognition:
   def __init__(self,data,target,seuil=0.8,neighbors=3) -> None:
