@@ -25,22 +25,26 @@ face = Face_Recognition(training)
 def get():
     data =[]
     images = os.listdir(IMAGES_DIR)
+    
     for idx in range(len(images)):
         try :
+            faceid =int(images[idx].split(".")[0])
             img_path =os.path.join(IMAGES_DIR,images[idx])
             with Image.open(img_path) as img :
                 buffer =io.BytesIO()
                 img.save(buffer,format="PNG")
                 img_base64=base64.b64encode(buffer.getvalue()).decode("utf-8")
                 data.append({
-                    "id":idx,
-                    "name":target_data[idx,0],
-                    "gender":target_data[idx,1],
+                    "id":faceid,
+                    "name":target_data[faceid,0],
+                    "gender":target_data[faceid,1],
                     "image":img_base64
                 })
         except Exception as err:
-            print (idx,'==>',err)
-            continue
+            return jsonify({
+                'erreur':str(err)
+            })
+            
     return jsonify(data)
 
 @app.route('/',methods=["GET","POST"])
