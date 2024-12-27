@@ -7,7 +7,7 @@ app.secret_key='face_prediction'
 app.config["MAX_CONTENT_LENGTH"]=4*1024*1024
 BASE_DIR= os.path.dirname(os.path.abspath(__file__))
 IMAGES_DIR= os.path.join(BASE_DIR,'static','Images' )
-UPOLD_FOLDER= os.path.join(BASE_DIR,'static','upload' )
+
 
 import  App.routes 
 

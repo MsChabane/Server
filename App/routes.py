@@ -1,4 +1,4 @@
-from App import app,IMAGES_DIR,UPOLD_FOLDER
+from App import app,IMAGES_DIR
 from PIL import Image 
 import pickle
 from App.face_recognition import Face_Recognition
@@ -90,29 +90,7 @@ def handel_testing(id):
             "erreur":f"{id} is not valid (must give number between 0 and 122 to predict the image )"
         })
 
-@app.route("/upload",methods=["POST"])
-def handel_upload():
-    if 'image' in request.files:
-        try: 
-            img = request.files["image"]
-            if img.filename =='':
-                img.filename = 'image.png'
-            image_path = os.path.join(UPOLD_FOLDER,img.filename)
-            img.save(image_path)
-            prediction = face.predict_source(image_path)
-            return jsonify({
-            "id":prediction[0],
-            "name":target_data[prediction[0],0],
-            "gender":target_data[prediction[0],1]
-            })
-        except Exception as err:
-            
-            return jsonify({
-                "errer":str(err)
-            })
-    return  jsonify({
-        "erreur":"image is not found"
-    })  
+ 
 
 @app.route("/face_prediction/prediction_source",methods=["POST"])
 def handel():
