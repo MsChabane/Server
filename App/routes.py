@@ -103,9 +103,9 @@ def handel():
         
         prediction = face.predict_source(io.BytesIO(image_data))[0]
         return jsonify({
-            "id":prediction,
-            "name":target_data[prediction,0],
-            "gender":target_data[prediction,1]
+            "id":str(prediction),
+            "name":str(target_data[prediction,0]),
+            "gender":str(target_data[prediction,1])
         })
     except Exception as err:
         return  jsonify ({
