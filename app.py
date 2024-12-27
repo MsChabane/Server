@@ -3,9 +3,6 @@ from flask import Flask,jsonify,request
 
 from flask_cors import CORS
  
-
-
-
 class Face_Recognition:
   def __init__(self,data,target,seuil=0.8,neighbors=3) -> None:
     if data is None :
