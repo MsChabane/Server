@@ -50,7 +50,7 @@ class Face_Recognition :
   def _make_prediction(self,X):
       X_scaled=self.stadardScaler.transform(X)
       X_scaled=self.acp.transform(X_scaled)
-      return self.Knn.predict(X_scaled)
+      return self.Knn.predict(X_scaled).astype(int)
   
   def predict(self ,X_test):
       return self._make_prediction(X_test)
